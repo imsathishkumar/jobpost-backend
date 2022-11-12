@@ -26,7 +26,6 @@ async function applyJob(req, res) {
       return res.status(400).send({ message:"Job is closed" });
 
     let application = await Application.find({jobId:req.body.jobId,userId:user._id});
-    console.log("hit",application);
     if(application.length != 0)
       return res.status(200).send({ message:"your already applied for this job" });
     application = {

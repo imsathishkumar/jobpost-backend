@@ -9,7 +9,6 @@ const schema = Joi.object({
 
 async function createJob(req, res) {
   try {
-    console.log("create job");
     const user = req.user;
     if (user.type != "company")
       return res
@@ -26,7 +25,6 @@ async function createJob(req, res) {
       description: req.body.description,
     };
     const validate = validateJob(job);
-    console.log(validate.error);
     if (validate.error)
       return res
         .status(400)
@@ -66,11 +64,15 @@ async function listMyApplicant(req, res) {
         .status(401)
         .send({ message: "You does not have access to get Applican" });
     // const job = await Job.find({userId : user._id});
-    const job = await Job.find({userId : user._id}).populate('applicants'); 
+    const job = await Job.find({userId : user._id}).populate('applicants');
 
+    const applicant = [];
+    job.forEach( e =>{
+      applicant.push(...e.applicants);
+    })
     res.status(200).send({
       message: "applicant list",
-      job
+      applicant
     });
   } catch (err) {
     res.status(500).send(err);
